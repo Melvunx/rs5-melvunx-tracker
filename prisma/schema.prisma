@@ -13,3 +13,21 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Challenge {
+  id            String   @id @default(cuid())
+  challengeName String   @map("challenge_name")
+  shotsHit      Int      @map("shots_hit")
+  kills         Int
+  weapon        String
+  accuracy      Float
+  damage        Int
+  criticalShots Int      @map("critical_shots")
+  totalShots    Int      @map("total_shots")
+  roundtime     Int
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([weapon])
+  @@index([challengeName])
+  @@map("challenges")
+}
