@@ -144,6 +144,16 @@ export async function importChallenge(text: string) {
 
     // await CreateChallenges(records);
 
+    // records.forEach((record) => console.log(record));
+
+    // console.log({
+    //   success: true,
+    //   imported: successCount,
+    //   errors: errorCount,
+    //   error: errorDetails.slice(0, 3).join(" , "), // Stock les 3 premières erreurs
+    //   errorDetails: errorDetails,
+    // });
+
     return {
       success: true,
       imported: successCount,

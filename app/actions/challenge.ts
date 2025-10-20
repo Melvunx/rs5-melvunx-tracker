@@ -33,6 +33,7 @@ export async function getChallengesStats(getAll?: boolean) {
   try {
     let stats;
 
+    // Si getAll est défini et est true on récupere les stats global
     if (getAll) {
       stats = await prisma.challenge.aggregate({
         _avg: {
