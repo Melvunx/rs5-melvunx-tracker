@@ -148,8 +148,8 @@ export async function importChallenge(text: string) {
       success: true,
       imported: successCount,
       errors: errorCount,
-      error: errorDetails[0],
-      errorDetails: errorDetails.slice(0, 5),
+      error: errorDetails.slice(0, 3).join(" , "), // Stock les 3 premières erreurs
+      errorDetails: errorDetails,
     };
   } catch (error) {
     console.error("❌ Erreur lors de l'upload : ", error);
