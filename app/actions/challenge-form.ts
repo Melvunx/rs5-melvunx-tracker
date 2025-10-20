@@ -1,7 +1,9 @@
 "use server";
 
+import { importChallenge } from "./import-challenge";
+
 export async function UploadChallengeFile(data: FormData) {
-  const file = data.get("file");
+  const file = data.get("file") as File;
 
   if (!file) {
     return {
@@ -10,8 +12,9 @@ export async function UploadChallengeFile(data: FormData) {
     };
   }
 
-  const text = await file.toString();
-  console.log(text);
+  const text = await file.text();
+
+  await importChallenge(text);
 
   return {
     success: true,
