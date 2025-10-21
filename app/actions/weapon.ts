@@ -62,7 +62,7 @@ export async function getWeaponStats(weaponName: string) {
   }
 }
 
-export async function getMaxAccuracy(weaponName: string) {
+export async function getMaxWeaponAccuracy(weaponName: string) {
   try {
     const weapon = await prisma.challenge.findFirst({
       where: {
@@ -101,7 +101,7 @@ export async function getMaxAccuracy(weaponName: string) {
   }
 }
 
-export async function getMaxShotsHit(weaponName: string) {
+export async function getMaxWeaponShotsHit(weaponName: string) {
   try {
     const weapon = await prisma.challenge.findFirst({
       where: {
