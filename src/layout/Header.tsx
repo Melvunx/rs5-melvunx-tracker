@@ -1,5 +1,5 @@
 "use client";
 
-export function Graph() {
+export function Header() {
   return <div></div>;
 }
