@@ -4,6 +4,8 @@ import {
   getWeaponStats,
 } from "@/app/actions/weapon";
 import { WEAPON_TYPE, WeaponType } from "../schema/weapon";
+import { assaultRifles } from "./type/assault_rifle";
+import { smgs } from "./type/smg";
 
 export function ImagePath(weaponName: string, type?: WeaponType) {
   if (type) return `./${type.toLowerCase()}/${weaponName}.png`;
@@ -13,12 +15,14 @@ export function ImagePath(weaponName: string, type?: WeaponType) {
 export class Weapon {
   private name: string;
   private type: WeaponType;
-  private image: string[];
+  private image: string;
+  private badge: string;
 
-  constructor(name: string, type: WeaponType, image: string[]) {
+  constructor(name: string, type: WeaponType, image: string, badge: string) {
     this.name = name;
     this.type = type;
     this.image = image;
+    this.badge = badge;
   }
 
   getName() {
@@ -30,10 +34,10 @@ export class Weapon {
   }
 
   getBadge() {
-    return this.image[0];
+    return this.badge;
   }
   getImage() {
-    return this.image[1];
+    return this.image;
   }
 
   async getGlobalStats() {
@@ -52,6 +56,6 @@ export class Weapon {
   }
 }
 
-const weapons = {
-  smg: {},
-};
+const weapons = smgs.concat(assaultRifles);
+
+export default weapons;
