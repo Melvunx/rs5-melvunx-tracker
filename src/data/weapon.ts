@@ -43,3 +43,7 @@ export class Weapon {
     return shotsHit;
   }
 }
+
+const weapons = {
+  smg: {},
+};

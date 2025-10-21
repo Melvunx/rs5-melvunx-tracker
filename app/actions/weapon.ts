@@ -40,12 +40,12 @@ export async function getWeaponStats(weaponName: string) {
     });
 
     return {
-      challenge_played: stats._count.weapon === null ? 0 : stats._count.weapon,
+      challenge_played: stats._count.weapon ? stats._count.weapon : 0,
       averge: {
-        accuracy: stats._avg.accuracy === null ? 0.0 : stats._avg.accuracy,
-        damage: stats._avg.damage === null ? 0 : stats._avg.damage,
-        kills: stats._avg.kills === null ? 0 : stats._avg.kills,
-        shots_hit: stats._avg.shotsHit === null ? 0 : stats._avg.shotsHit,
+        accuracy: stats._avg.accuracy ? stats._avg.accuracy : 0.0,
+        damage: stats._avg.damage ? stats._avg.damage : 0,
+        kills: stats._avg.kills ? stats._avg.kills : 0,
+        shots_hit: stats._avg.shotsHit ? stats._avg.shotsHit : 0,
       },
     };
   } catch (error) {
@@ -76,7 +76,7 @@ export async function getMaxWeaponAccuracy(weaponName: string) {
       );
 
       return {
-        accuracy: 0,
+        accuracy: 0.0,
       };
     }
 
@@ -90,7 +90,7 @@ export async function getMaxWeaponAccuracy(weaponName: string) {
     });
 
     return {
-      accuracy: stats._max.accuracy ? stats._max.accuracy : 0,
+      accuracy: stats._max.accuracy ? stats._max.accuracy : 0.0,
     };
   } catch (error) {
     console.error("❌ Erreur:", error);
