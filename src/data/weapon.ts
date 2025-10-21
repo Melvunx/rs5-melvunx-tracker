@@ -5,12 +5,17 @@ import {
 } from "@/app/actions/weapon";
 import { WEAPON_TYPE, WeaponType } from "../schema/weapon";
 
+export function ImagePath(weaponName: string, type?: WeaponType) {
+  if (type) return `./${type.toLowerCase()}/${weaponName}.png`;
+  else return `./badges/${weaponName}.webp`;
+}
+
 export class Weapon {
   private name: string;
   private type: WeaponType;
-  private image: string;
+  private image: string[];
 
-  constructor(name: string, type: WeaponType, image: string) {
+  constructor(name: string, type: WeaponType, image: string[]) {
     this.name = name;
     this.type = type;
     this.image = image;
@@ -24,8 +29,11 @@ export class Weapon {
     return WEAPON_TYPE[this.type];
   }
 
+  getBadge() {
+    return this.image[0];
+  }
   getImage() {
-    return this.image;
+    return this.image[1];
   }
 
   async getGlobalStats() {
