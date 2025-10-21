@@ -65,12 +65,15 @@ export async function getChallengesStats(getAll?: boolean) {
       });
     }
 
+    const totalGamePlayed = await prisma.challenge.count();
+
     return {
       averge: {
         accuracy: stats._avg.accuracy === null ? 0.0 : stats._avg.accuracy,
         damage: stats._avg.damage === null ? 0 : stats._avg.damage,
         kills: stats._avg.kills === null ? 0 : stats._avg.kills,
       },
+      total_game_played: totalGamePlayed,
       max_accuracy: stats._max.accuracy === null ? 0.0 : stats._max.accuracy,
       min_accuracy: stats._min.accuracy === null ? 0.0 : stats._min.accuracy,
     };
@@ -83,6 +86,7 @@ export async function getChallengesStats(getAll?: boolean) {
         damage: 0,
         kills: 0,
       },
+      total_game_played: 0,
       max_accuracy: 0.0,
       min_accuracy: 0.0,
     };

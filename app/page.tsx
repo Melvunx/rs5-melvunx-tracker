@@ -2,7 +2,8 @@
 
 import { Button } from "@/src/components/ui/button";
 import { Upload } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { getChallengesStats } from "./actions/challenge";
 import { UploadChallengeFile } from "./actions/challenge-form";
 
 export default function Home() {
@@ -11,6 +12,19 @@ export default function Home() {
   const [response, setResponse] = useState<Record<string, unknown> | null>(
     null
   );
+
+  // useEffect(() => {
+  //   const testAggregate = async () => {
+  //     const challenge = await getChallengesStats();
+
+  //     console.log(challenge);
+
+  //     const tenChallenge = await getChallengesStats(true);
+  //     console.log(tenChallenge);
+  //   };
+
+  //   testAggregate();
+  // }, []);
 
   const onHandleFormAction = async (formData: FormData) => {
     if (!file) {
