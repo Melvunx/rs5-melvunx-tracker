@@ -69,13 +69,13 @@ export async function getChallengesStats(getAll?: boolean) {
 
     return {
       averge: {
-        accuracy: stats._avg.accuracy === null ? 0.0 : stats._avg.accuracy,
-        damage: stats._avg.damage === null ? 0 : stats._avg.damage,
-        kills: stats._avg.kills === null ? 0 : stats._avg.kills,
+        accuracy: stats._avg.accuracy ? stats._avg.accuracy : 0,
+        damage: stats._avg.damage ? stats._avg.damage : 0,
+        kills: stats._avg.kills ? stats._avg.kills : 0,
       },
       total_game_played: totalGamePlayed,
-      max_accuracy: stats._max.accuracy === null ? 0.0 : stats._max.accuracy,
-      min_accuracy: stats._min.accuracy === null ? 0.0 : stats._min.accuracy,
+      max_accuracy: stats._max.accuracy ? stats._max.accuracy : 0,
+      min_accuracy: stats._min.accuracy ? stats._min.accuracy : 0,
     };
   } catch (error) {
     console.error("❌ Erreur : ", error);
