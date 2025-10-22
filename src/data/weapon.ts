@@ -4,8 +4,6 @@ import {
   getWeaponStats,
 } from "@/app/actions/weapon";
 import { WEAPON_TYPE, WeaponType } from "../schema/weapon";
-import { assaultRifles } from "./type/assault_rifle";
-import { smgs } from "./type/smg";
 
 export function ImagePath(weaponName: string, type?: WeaponType) {
   if (type) return `./${type.toLowerCase()}/${weaponName}.png`;
@@ -54,8 +52,9 @@ export class Weapon {
     const shotsHit = await getMaxWeaponShotsHit(this.getName());
     return shotsHit;
   }
+
+  async getChallengeNumber() {
+    const { challenge_played } = await this.getGlobalStats();
+    return challenge_played;
+  }
 }
-
-const weapons = smgs.concat(assaultRifles);
-
-export default weapons;

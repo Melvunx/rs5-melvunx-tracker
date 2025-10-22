@@ -16,9 +16,3 @@ export type WeaponType =
   | "SNIPER"
   | "PISTOL"
   | "SHOTGUN";
-
-export type Weapon = {
-  name: string;
-  type: WeaponType;
-  image: string;
-};
