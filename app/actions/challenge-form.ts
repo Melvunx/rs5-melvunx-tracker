@@ -1,7 +1,5 @@
 "use server";
 
-import { importChallenge } from "./import-challenge";
-
 export async function UploadChallengeFile(data: FormData) {
   try {
     const file = data.get("file") as File;
@@ -15,7 +13,7 @@ export async function UploadChallengeFile(data: FormData) {
 
     const text = await file.text();
 
-    await importChallenge(text);
+    // await importChallenge(text);
 
     return {
       success: true,

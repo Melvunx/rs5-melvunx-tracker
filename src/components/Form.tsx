@@ -3,9 +3,14 @@
 import { Upload } from "lucide-react";
 import { RefObject } from "react";
 import { Submit } from "./Submit";
+import { Button } from "./ui/button";
+import { Spinner } from "./ui/spinner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type FormProps = {
   action: (formData: FormData) => Promise<void>;
+  onReset: () => void;
+  pending: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputRef: RefObject<HTMLInputElement | null>;
   file: File | null;
@@ -13,6 +18,8 @@ type FormProps = {
 
 export function Form({
   action: onHandleFormAction,
+  onReset,
+  pending,
   onChange: handleFileChange,
   inputRef: ref,
   file,
@@ -35,11 +42,26 @@ export function Form({
             className="hidden"
             id="file-upload"
           />
-          <Upload />
-          <span>{file ? file.name : "Cliquer pour choisir un fichier"}</span>
+
+          {pending ? <Spinner /> : <Upload />}
+          <span
+            className={pending ? "text-amber-700 italic" : "text-amber-400"}
+          >
+            {file ? file.name : "Cliquer pour choisir un fichier"}
+          </span>
         </label>
       </div>
-      <Submit />
+      <Submit emptyInput={file ? false : true} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button type="button" variant="ghost" onClick={onReset}>
+            X
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>Reset</span>
+        </TooltipContent>
+      </Tooltip>
     </form>
   );
 }

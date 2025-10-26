@@ -1,9 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
-import { CSSProperties } from "react";
 import { ExternalToast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
-import { buttonVariants } from "../components/ui/button";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,9 +22,6 @@ export function toastParams(field: {
         console.log("Fermé !");
       },
     },
-    actionButtonStyle: buttonVariants({
-      variant: "ghost",
-    }) as CSSProperties,
   };
 
   if (success) {

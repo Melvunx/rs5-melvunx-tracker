@@ -4,6 +4,14 @@ import { UploadChallengeFile } from "@/app/actions/challenge-form";
 import { ChangeEvent, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Form } from "../components/Form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { toastParams } from "../lib/utils";
 
 export function FileForm() {
@@ -53,12 +61,34 @@ export function FileForm() {
     if (selectedFile) setFile(selectedFile);
   };
 
+  const handleResetFile = () => {
+    setFile(null);
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
-    <Form
-      action={onHandleFormAction}
-      onChange={handleFileChange}
-      file={file}
-      inputRef={fileInputRef}
-    />
+    <Card>
+      <CardHeader>
+        <CardTitle>Apex Legends Stats Importer !</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription>
+          Sélectionnez votre fichier de résultats
+        </CardDescription>
+        <Form
+          action={onHandleFormAction}
+          onReset={handleResetFile}
+          pending={isPending}
+          onChange={handleFileChange}
+          file={file}
+          inputRef={fileInputRef}
+        />
+      </CardContent>
+      <CardFooter>
+        <span>Format accecptés : .txt</span>
+        <span>Format attendu: CSV avec en-têtes</span>
+      </CardFooter>
+    </Card>
   );
 }
