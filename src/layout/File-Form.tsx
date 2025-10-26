@@ -1,102 +1,64 @@
 "use client";
 
 import { UploadChallengeFile } from "@/app/actions/challenge-form";
-import { Upload } from "lucide-react";
-import { ChangeEvent, useState } from "react";
-import { Button } from "../components/ui/button";
+import { ChangeEvent, useRef, useState, useTransition } from "react";
+import { toast } from "sonner";
+import { Form } from "../components/Form";
+import { toastParams } from "../lib/utils";
 
 export function FileForm() {
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<Record<string, unknown> | null>(
-    null
-  );
-
-  // useEffect(() => {
-  //   const testAggregate = async () => {
-  //     const challenge = await getChallengesStats();
-
-  //     console.log(challenge);
-
-  //     const tenChallenge = await getChallengesStats(true);
-  //     console.log(tenChallenge);
-  //   };
-
-  //   testAggregate();
-  // }, []);
+  const [isPending, startTransition] = useTransition();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onHandleFormAction = async (formData: FormData) => {
     if (!file) {
-      setResponse({
-        success: false,
-        error: "Veuillez sélectionner un fichier",
-      });
+      toast(
+        "⚠️ Attention !",
+        toastParams({
+          success: false,
+          message: "Aucun fichier sélectionné",
+        })
+      );
       return;
     }
 
-    setLoading(true);
-    setResponse(null);
+    startTransition(async () => {
+      try {
+        formData.append("file", file);
+        const data = await UploadChallengeFile(formData);
 
-    try {
-      formData.append("file", file);
+        if (data.success) {
+          setFile(null);
 
-      const data = await UploadChallengeFile(formData);
-      setResponse(data);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+      } catch (error) {
+        toast(
+          "⚠️ Attention !",
+          toastParams({
+            success: false,
+            message: "Erreur lors de l'upload",
+          })
+        );
 
-      if (data.success) {
-        setFile(null);
-
-        const fileInput = document.getElementById("file-upload");
-        if (fileInput) fileInput.nodeValue = "";
+        console.error("Error uploading file:", error);
       }
-    } catch (error) {
-      setResponse({
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Erreur lors de l'upload",
-      });
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files;
+    const selectedFile = e.target.files?.[0];
 
-    if (selectedFile) {
-      const file = selectedFile[0];
-      setFile(file);
-      setResponse(null);
-    }
+    if (selectedFile) setFile(selectedFile);
   };
 
   return (
-    <div>
-      <form
-        action={(formData) => onHandleFormAction(formData)}
-        className="w-full flex items-center"
-      >
-        <div className="">
-          <label
-            htmlFor="file-upload"
-            className="flex items-center justify-center w-full px-6 py-4"
-          >
-            <input
-              type="file"
-              accept=".txt"
-              onChange={handleFileChange}
-              className="hidden"
-              id="file-upload"
-            />
-            <Upload />
-            <span>{file ? file.name : "Cliquer pour choisir un fichier"}</span>
-          </label>
-        </div>
-
-        <Button className="cursor-pointer" variant="ghost" type="submit">
-          Send
-        </Button>
-      </form>
-    </div>
+    <Form
+      action={onHandleFormAction}
+      onChange={handleFileChange}
+      file={file}
+      inputRef={fileInputRef}
+    />
   );
 }

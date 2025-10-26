@@ -141,3 +141,39 @@ export async function getMaxWeaponShotsHit(weaponName: string) {
     };
   }
 }
+
+export async function getChallengePlayedPerWeapon(weaponName: string) {
+  try {
+    const weapon = await prisma.challenge.findFirst({
+      where: {
+        weapon: weaponName,
+      },
+    });
+
+    if (!weapon) {
+      console.log(
+        `❌ Les stats de l'arme "${weaponName}" n'a pas été trouvée !`
+      );
+
+      return {
+        challenge_played: 0,
+      };
+    }
+
+    const stats = await prisma.challenge.count({
+      where: {
+        weapon: weaponName,
+      },
+    });
+
+    return {
+      challenge_played: stats,
+    };
+  } catch (error) {
+    console.error("❌ Erreur:", error);
+
+    return {
+      challenge_played: 0,
+    };
+  }
+}

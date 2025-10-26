@@ -19,8 +19,16 @@ export async function CreateChallenges(newChallenges: CreateChallenge[]) {
   }
 }
 
-export async function getChallenges() {
+export async function getChallenges(weaponName?: string) {
   try {
+    if (weaponName) {
+      const challenges = await prisma.challenge.findMany({
+        where: { weapon: weaponName },
+      });
+
+      return challenges;
+    }
+
     const challenges = await prisma.challenge.findMany();
     return challenges;
   } catch (error) {
@@ -69,7 +77,7 @@ export async function getChallengesStats(getAll?: boolean) {
 
     return {
       averge: {
-        accuracy: stats._avg.accuracy ? stats._avg.accuracy : 0,
+        accuracy: stats._avg.accuracy ? stats._avg.accuracy : 0.0,
         damage: stats._avg.damage ? stats._avg.damage : 0,
         kills: stats._avg.kills ? stats._avg.kills : 0,
       },

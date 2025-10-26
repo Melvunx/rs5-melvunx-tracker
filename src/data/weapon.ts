@@ -1,4 +1,6 @@
+import { getChallenges } from "@/app/actions/challenge";
 import {
+  getChallengePlayedPerWeapon,
   getMaxWeaponAccuracy,
   getMaxWeaponShotsHit,
   getWeaponStats,
@@ -43,18 +45,26 @@ export class Weapon {
     return stats;
   }
 
+  async getWeaponChallenge() {
+    const challenges = await getChallenges(this.getName());
+    return challenges;
+  }
+
   async getMaxAccuracy() {
-    const accuracy = await getMaxWeaponAccuracy(this.getName());
+    const { accuracy } = await getMaxWeaponAccuracy(this.getName());
     return accuracy;
   }
 
   async getMaxShotsHit() {
-    const shotsHit = await getMaxWeaponShotsHit(this.getName());
-    return shotsHit;
+    const { shots_hit } = await getMaxWeaponShotsHit(this.getName());
+    return shots_hit;
   }
 
   async getChallengeNumber() {
-    const { challenge_played } = await this.getGlobalStats();
+    const { challenge_played } = await getChallengePlayedPerWeapon(
+      this.getName()
+    );
+
     return challenge_played;
   }
 }
