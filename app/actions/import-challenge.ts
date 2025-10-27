@@ -144,7 +144,7 @@ export async function importChallenge(text: string) {
       };
     }
 
-    // await CreateChallenges(records);
+    await CreateChallenges(records);
 
     records.forEach((record) => console.log(record));
 

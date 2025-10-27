@@ -9,6 +9,14 @@ export function cn(...inputs: ClassValue[]) {
 
 export const idsSchema = z.array(z.string());
 
+export type LinkType = {
+  link: string;
+  label: string;
+  classname?: string;
+  size?: "sm" | "lg";
+  variant?: "outline" | "ghost" | "link" | "destructive" | "secondary";
+};
+
 export function toastParams(field: {
   success: boolean;
   message?: string;
@@ -22,7 +30,7 @@ export function toastParams(field: {
         console.log("Fermé !");
       },
     },
-  };
+  } satisfies ExternalToast;
 
   if (success) {
     return {

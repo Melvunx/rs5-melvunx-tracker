@@ -45,7 +45,9 @@ export function Form({
 
           {pending ? <Spinner /> : <Upload />}
           <span
-            className={pending ? "text-amber-700 italic" : "text-amber-400"}
+            className={`transition-colors ${
+              pending ? "text-amber-700 italic" : "text-amber-400"
+            }`}
           >
             {file ? file.name : "Cliquer pour choisir un fichier"}
           </span>

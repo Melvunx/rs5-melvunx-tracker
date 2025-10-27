@@ -12,7 +12,7 @@ export function Submit({ emptyInput: empty }: SubmitProps) {
   const { pending } = useFormStatus();
   return (
     <Button
-      className="cursor-pointer"
+      className="cursor-pointer transition-colors"
       variant="ghost"
       type="submit"
       disabled={pending || empty}
