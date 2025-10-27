@@ -68,12 +68,12 @@ export function FileForm() {
   };
 
   return (
-    <Card>
+    <Card className="px-4 py-6">
       <CardHeader>
         <CardTitle>Apex Legends Stats Importer !</CardTitle>
       </CardHeader>
-      <CardContent>
-        <CardDescription>
+      <CardContent className="flex flex-col items-center max-w-3xl mx-auto py-4 bg-amber-50/20 rounded-2xl justify-center gap-4">
+        <CardDescription className="italic">
           Sélectionnez votre fichier de résultats
         </CardDescription>
         <Form

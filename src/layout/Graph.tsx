@@ -1,18 +1,18 @@
 "use client";
 
-import { Challenge } from "@/app/generated/prisma";
 import { useEffect, useState, useTransition } from "react";
 import { Chart } from "../components/Chart";
 import { Weapon } from "../data/weapon";
 import weapons from "../data/weapon-list";
+import { ChartData } from "../lib/utils";
 
 export function Graph() {
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [challenges, setChallenges] = useState<ChartData[]>([]);
   const [apexWeapon, setApexWeapon] = useState<Weapon | null>(null);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    const getChallenges = () => {
+    const getChallengesData = () => {
       startTransition(() => {
         // Reset state
         setApexWeapon(null);
@@ -23,22 +23,33 @@ export function Graph() {
         if (r99Data) {
           setApexWeapon(r99Data);
           r99Data.getWeaponChallenge().then((challenges) => {
-            const sortedDate = new Set<string>();
-
             const sortedChallenges = challenges.filter((c) => {
-              if (sortedDate.has(c.id) && c.challengeName !== "STRAFING DUMMY")
-                return false;
-              sortedDate.add(c.id);
+              if (c.challengeName !== "STRAFING DUMMY") return false; // Filter only STRAFING DUMMY challenges
               return true;
             });
 
-            setChallenges(sortedChallenges);
+            const chartChallenges = sortedChallenges.map((challenge) => {
+              return {
+                accuracy: challenge.accuracy,
+                day: new Date(
+                  challenge.createdAt.getFullYear(),
+                  challenge.createdAt.getMonth(),
+                  challenge.createdAt.getDate()
+                ).toLocaleString("fr-FR", {
+                  year: "numeric",
+                  month: "short",
+                  day: "2-digit",
+                }),
+              } satisfies ChartData;
+            });
+
+            setChallenges(chartChallenges);
           });
         }
       });
     };
 
-    getChallenges();
+    getChallengesData();
   }, []);
 
   return <Chart data={challenges} weapon={apexWeapon} pending={isPending} />;

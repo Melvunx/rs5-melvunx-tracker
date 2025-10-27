@@ -27,12 +27,12 @@ export function Form({
   return (
     <form
       action={(formData) => onHandleFormAction(formData)}
-      className="w-full flex items-center"
+      className="w-full flex flex-col items-center justify-center gap-2"
     >
       <div>
         <label
           htmlFor="file-upload"
-          className="flex items-center justify-center w-full px-6 py-4"
+          className="flex items-center justify-evenly w-sm p-2 border-2 border-dashed border-amber-400 rounded-md cursor-pointer hover:border-amber-800 transition-colors gap-4"
         >
           <input
             type="file"
@@ -53,17 +53,19 @@ export function Form({
           </span>
         </label>
       </div>
-      <Submit emptyInput={file ? false : true} />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button type="button" variant="ghost" onClick={onReset}>
-            X
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <span>Reset</span>
-        </TooltipContent>
-      </Tooltip>
+      <div>
+        <Submit emptyInput={file ? false : true} />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button type="button" size="sm" variant="ghost" onClick={onReset}>
+              X
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span>Reset</span>
+          </TooltipContent>
+        </Tooltip>
+      </div>
     </form>
   );
 }

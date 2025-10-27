@@ -1,8 +1,9 @@
 "use client";
 
-import { Challenge } from "@/app/generated/prisma";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { Weapon } from "../data/weapon";
+import { ChartData } from "../lib/utils";
+import { Loading } from "./Loading";
 import {
   Card,
   CardContent,
@@ -16,10 +17,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "./ui/chart";
-import { Spinner } from "./ui/spinner";
 
 type ChartProps = {
-  data: Challenge[];
+  data: ChartData[];
   weapon: Weapon | null;
   pending: boolean;
 };
@@ -32,17 +32,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function Chart({ data, weapon, pending }: ChartProps) {
-  if (pending) {
-    return (
-      <Card>
-        <CardContent className="flex py-10 items-center justify-center">
-          <span className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Spinner /> Chargement du graphique
-          </span>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (pending) return <Loading />;
 
   return (
     <Card>
@@ -61,11 +51,11 @@ export function Chart({ data, weapon, pending }: ChartProps) {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="id"
+              dataKey="day"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 1)}
+              tickFormatter={(value) => value.slice(0, 7)}
             />
             <ChartTooltip
               cursor={false}

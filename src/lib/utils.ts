@@ -17,6 +17,26 @@ export type LinkType = {
   variant?: "outline" | "ghost" | "link" | "destructive" | "secondary";
 };
 
+export type ChartData = {
+  accuracy: number;
+  day: string;
+};
+
+export type WeaponStat = {
+  weapon_name: string;
+  challenge_played: number;
+  image_path: {
+    badge: string;
+    image: string;
+  };
+  averge: {
+    accuracy: number;
+    damage: number;
+    kills: number;
+    shots_hit: number;
+  };
+};
+
 export function toastParams(field: {
   success: boolean;
   message?: string;
