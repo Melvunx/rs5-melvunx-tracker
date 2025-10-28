@@ -89,6 +89,28 @@ export const filteredWeapons = (
     });
 };
 
+export const filteredDataDate = (data: ChartData[], timeRange: string) => {
+  return data.filter((item) => {
+    const date = new Date(item.day);
+    const referenceDate = new Date(); // Current date
+
+    switch (timeRange) {
+      case "7d":
+        referenceDate.setDate(referenceDate.getDate() - 7);
+        break;
+      case "30d":
+        referenceDate.setDate(referenceDate.getDate() - 30);
+        break;
+      case "90d":
+        referenceDate.setDate(referenceDate.getDate() - 90);
+        break;
+      default:
+        break;
+    }
+    return date >= referenceDate;
+  });
+};
+
 export function getAllWeaponName() {
   return weapons.map((weapon) => {
     return {

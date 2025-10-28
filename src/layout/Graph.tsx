@@ -25,7 +25,12 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
 } from "../components/ui/dropdown-menu";
-import { filteredWeapons, getAllWeaponName } from "../lib/utils";
+import {
+  ChartData,
+  filteredDataDate,
+  filteredWeapons,
+  getAllWeaponName,
+} from "../lib/utils";
 
 export function Graph() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
@@ -35,37 +40,8 @@ export function Graph() {
     value: "7d",
   });
   const [weaponName, setWeaponName] = useState("Toutes les armes");
-  // const [filteredChallenges, setFilteredChallenges] = useState<ChartData[]>([]);
+  const [filteredData, setFilteredData] = useState<ChartData[]>([]);
   const allWeaponsNames = getAllWeaponName();
-
-  // useEffect(() => {
-  //   const isMounted = true;
-  //   if (!isMounted) return;
-
-  //   const data = filteredWeapons(challenges, weaponName);
-  //   setFilteredChallenges(data);
-  // }, [challenges, weaponName]);
-
-  // const filteredData = filteredChallenges.filter((item) => {
-  //   const date = new Date(item.day);
-  //   const referenceDate = new Date(); // Current date
-
-  //   switch (timeRange.value) {
-  //     case "7d":
-  //       referenceDate.setDate(referenceDate.getDate() - 7);
-  //       break;
-  //     case "30d":
-  //       referenceDate.setDate(referenceDate.getDate() - 30);
-  //       break;
-  //     case "90d":
-  //       referenceDate.setDate(referenceDate.getDate() - 90);
-  //       break;
-  //     default:
-  //       referenceDate.setFullYear(referenceDate.getFullYear() - 1);
-  //   }
-
-  //   return date >= referenceDate;
-  // });
 
   useEffect(() => {
     const isMounted = true;
@@ -74,7 +50,7 @@ export function Graph() {
     const getChallengesData = () => {
       startTransition(async () => {
         // Reset state
-        setChallenges([]);
+        setFilteredData([]);
 
         const challenges = await getChallenges();
 
@@ -90,6 +66,39 @@ export function Graph() {
 
     getChallengesData();
   }, []);
+
+  const onDateChange = (value: string) => {
+    startTransition(() => {
+      setFilteredData([]);
+
+      switch (value) {
+        case "7d":
+          setTimeRange({ label: "7 jours", value: "7d" });
+          break;
+        case "30d":
+          setTimeRange({ label: "30 jours", value: "30d" });
+          break;
+        case "90d":
+          setTimeRange({ label: "90 jours", value: "90d" });
+          break;
+        default:
+          break;
+      }
+
+      const data = filteredDataDate(filteredData, value);
+      setFilteredData(data);
+    });
+  };
+
+  const onWeaponChange = (value: string) => {
+    startTransition(() => {
+      setWeaponName(value);
+      setFilteredData([]);
+
+      const data = filteredWeapons(challenges, value);
+      setFilteredData(data);
+    });
+  };
 
   if (isPending) return <Loading loadingString="Chargement du graphique" />;
 
@@ -107,19 +116,7 @@ export function Graph() {
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
                 value={timeRange.value}
-                onValueChange={(value) => {
-                  switch (value) {
-                    case "7d":
-                      setTimeRange({ label: "7 jours", value: "7d" });
-                      break;
-                    case "30d":
-                      setTimeRange({ label: "30 jours", value: "30d" });
-                      break;
-                    case "90d":
-                      setTimeRange({ label: "90 jours", value: "90d" });
-                      break;
-                  }
-                }}
+                onValueChange={(value) => onDateChange(value)}
               >
                 <DropdownMenuRadioItem value="90d">
                   90 derniers jours
@@ -142,11 +139,7 @@ export function Graph() {
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
                 value={weaponName}
-                onValueChange={(value) => {
-                  setWeaponName(value);
-                  const data = filteredWeapons(challenges, value);
-                  setFilteredChallenges(data);
-                }}
+                onValueChange={(value) => onWeaponChange(value)}
               >
                 <DropdownMenuRadioItem value="Toutes les armes">
                   Toutes les armes
@@ -173,7 +166,7 @@ export function Graph() {
         </ButtonGroup>
       </CardHeader>
       <CardContent>
-        <Chart challenges={challenges} pending={isPending} />
+        <Chart data={filteredData} isChanges={isPending} />
       </CardContent>
     </Card>
   );
