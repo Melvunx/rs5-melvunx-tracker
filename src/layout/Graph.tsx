@@ -15,6 +15,7 @@ import { ButtonGroup } from "../components/ui/button-group";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
@@ -60,18 +61,23 @@ export function Graph() {
             challenge.accuracy !== 0
         );
 
-        setChallenges(chartChallenges.slice(0, 100));
+        setChallenges(chartChallenges);
+
+        const data = filteredWeapons(
+          chartChallenges,
+          weaponName,
+          timeRange.value
+        );
+        setFilteredData(data);
       });
     };
 
     getChallengesData();
-  }, []);
+  }, [timeRange.value, weaponName]);
 
-  const onDateChange = (value: string) => {
+  const onDateChange = (timeRange: string) => {
     startTransition(() => {
-      setFilteredData([]);
-
-      switch (value) {
+      switch (timeRange) {
         case "7d":
           setTimeRange({ label: "7 jours", value: "7d" });
           break;
@@ -85,17 +91,17 @@ export function Graph() {
           break;
       }
 
-      const data = filteredDataDate(filteredData, value);
+      const data = filteredDataDate(filteredData, timeRange);
       setFilteredData(data);
     });
   };
 
-  const onWeaponChange = (value: string) => {
+  const onWeaponChange = (weaponName: string) => {
     startTransition(() => {
-      setWeaponName(value);
+      setWeaponName(weaponName);
       setFilteredData([]);
 
-      const data = filteredWeapons(challenges, value);
+      const data = filteredWeapons(challenges, weaponName, timeRange.value);
       setFilteredData(data);
     });
   };
@@ -166,8 +172,28 @@ export function Graph() {
         </ButtonGroup>
       </CardHeader>
       <CardContent>
-        <Chart data={filteredData} isChanges={isPending} />
+        <Chart
+          data={filteredData}
+          isChanges={isPending}
+          timeRange={timeRange.value}
+        />
       </CardContent>
+      <CardFooter>
+        <div>
+          <p className="text-sm text-muted-foreground">
+            {`Affichage des données pour ${
+              weaponName === "Toutes les armes"
+                ? "toutes les armes"
+                : weaponName
+            } sur les ${timeRange.label}.`}
+          </p>
+          {filteredData.length === 0 && (
+            <p className="text-sm text-red-500">
+              Aucune donnée disponible pour les filtres sélectionnés.
+            </p>
+          )}
+        </div>
+      </CardFooter>
     </Card>
   );
 }

@@ -66,33 +66,12 @@ export function toastParams(field: {
   };
 }
 
-export const filteredWeapons = (
-  challenges: Challenge[],
-  weaponName: string
-) => {
-  return challenges
-    .filter(
-      (challenge) =>
-        (challenge.weapon === weaponName ||
-          weaponName === "Toutes les armes") &&
-        challenge.challengeName === "STRAFING DUMMY" &&
-        challenge.accuracy !== 0
-    )
-    .map((c) => {
-      return {
-        accuracy: c.accuracy,
-        day: new Date(c.createdAt.getDate()).toLocaleString("fr-FR", {
-          month: "short",
-          day: "2-digit",
-        }),
-      };
-    });
-};
-
 export const filteredDataDate = (data: ChartData[], timeRange: string) => {
   return data.filter((item) => {
     const date = new Date(item.day);
+
     const referenceDate = new Date(); // Current date
+    console.log(`Filtered date data: ${JSON.stringify(data[1])}`);
 
     switch (timeRange) {
       case "7d":
@@ -111,6 +90,31 @@ export const filteredDataDate = (data: ChartData[], timeRange: string) => {
   });
 };
 
+export const filteredWeapons = (
+  challenges: Challenge[],
+  weaponName: string,
+  timeRange?: string
+) => {
+  const data = challenges
+    .filter(
+      (challenge) =>
+        (challenge.weapon === weaponName ||
+          weaponName === "Toutes les armes") &&
+        challenge.challengeName === "STRAFING DUMMY" &&
+        challenge.accuracy !== 0
+    )
+    .map((c) => {
+      return {
+        accuracy: c.accuracy,
+        day: c.createdAt.toISOString().split("T")[0],
+      };
+    });
+  console.log(`Filtered weapon data: ${JSON.stringify(data[0])}`);
+
+  if (timeRange) return filteredDataDate(data, timeRange);
+  else return data;
+};
+
 export function getAllWeaponName() {
   return weapons.map((weapon) => {
     return {
@@ -120,5 +124,13 @@ export function getAllWeaponName() {
         image: weapon.getImage(),
       },
     };
+  });
+}
+
+export function formatedDate(date: Date) {
+  return date.toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { ChartData } from "../lib/utils";
+import { ChartData, formatedDate } from "../lib/utils";
 import {
   ChartConfig,
   ChartContainer,
@@ -13,6 +13,7 @@ import { Spinner } from "./ui/spinner";
 type ChartProps = {
   data: ChartData[];
   isChanges: boolean;
+  timeRange: string;
 };
 
 const chartConfig = {
@@ -22,7 +23,27 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Chart({ data, isChanges }: ChartProps) {
+export function Chart({ data, isChanges, timeRange }: ChartProps) {
+  const formatedData = data.map((item) => {
+    return {
+      ...item,
+      day: formatedDate(new Date(item.day)),
+    };
+  });
+
+  const onTimeRangeChange = (timeRange: string) => {
+    switch (timeRange) {
+      case "7d":
+        return 369;
+      case "30d":
+        return 169;
+      case "90d":
+        return 68;
+      default:
+        return 34;
+    }
+  };
+
   if (isChanges)
     return (
       <div>
@@ -34,7 +55,7 @@ export function Chart({ data, isChanges }: ChartProps) {
     <ChartContainer config={chartConfig}>
       <AreaChart
         accessibilityLayer
-        data={data}
+        data={formatedData}
         margin={{
           left: 12,
           right: 12,
@@ -46,11 +67,17 @@ export function Chart({ data, isChanges }: ChartProps) {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 7)}
+          minTickGap={onTimeRangeChange(timeRange)}
+          tickFormatter={(value) => value.slice(0, 6)}
         />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent indicator="line" />}
+          content={
+            <ChartTooltipContent
+              labelClassName="text-indigo-200 italic"
+              indicator="line"
+            />
+          }
         />
         <Area
           dataKey="accuracy"

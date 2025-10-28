@@ -23,7 +23,7 @@ export function Header() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > 100) {
+      if (currentScrollY > 70) {
         setIsOnTop(false);
         if (currentScrollY > lastScrollY)
           setIsVisible(false); // Scroller vers le bas
@@ -42,22 +42,26 @@ export function Header() {
   }, [lastScrollY]);
 
   return (
-    <header>
+    <header className="mb-14">
       <nav
         className={`fixed top-0 left-0 right-0 transition-transform duration-300 z-50 ${
           isOnTop ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="max-w-6xl px-4 py-4 flex items-center justify-between">
-          <h1 className="croll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+        <div className="px-4 py-4 flex items-center justify-between">
+          <h1 className="croll-m-20 ml-4 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
             R5 Melvunx tracker
           </h1>
-          <ul>
+          <ul className="max-w-lg w-full flex justify-evenly">
             {links.map((l) => {
               const { link, label } = l;
               return (
                 <li key={link}>
-                  <LinkButton variant="outline" link={link}>
+                  <LinkButton
+                    variant="outline"
+                    classname="backdrop-blur-sm"
+                    link={link}
+                  >
                     {label}
                   </LinkButton>
                 </li>
