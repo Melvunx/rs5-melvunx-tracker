@@ -1,17 +1,18 @@
 "use client";
 
-import { Challenge } from "@/app/generated/prisma";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { ChartData } from "../lib/utils";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "./ui/chart";
+import { Spinner } from "./ui/spinner";
 
 type ChartProps = {
-  challenges: Challenge[];
-  pending: boolean;
+  data: ChartData[];
+  isChanges: boolean;
 };
 
 const chartConfig = {
@@ -21,12 +22,19 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Chart({ challenges, pending }: ChartProps) {
+export function Chart({ data, isChanges }: ChartProps) {
+  if (isChanges)
+    return (
+      <div>
+        <Spinner /> Chargement du graphique
+      </div>
+    );
+
   return (
     <ChartContainer config={chartConfig}>
       <AreaChart
         accessibilityLayer
-        data={filteredData}
+        data={data}
         margin={{
           left: 12,
           right: 12,
