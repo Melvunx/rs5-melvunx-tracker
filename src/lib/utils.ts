@@ -1,7 +1,9 @@
+import { Challenge } from "@/app/generated/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { ExternalToast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
+import weapons from "../data/weapon-list";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -62,4 +64,39 @@ export function toastParams(field: {
     description: message || "❌ Une erreur est survenue !",
     ...globalParams,
   };
+}
+
+export const filteredWeapons = (
+  challenges: Challenge[],
+  weaponName: string
+) => {
+  return challenges
+    .filter(
+      (challenge) =>
+        (challenge.weapon === weaponName ||
+          weaponName === "Toutes les armes") &&
+        challenge.challengeName === "STRAFING DUMMY" &&
+        challenge.accuracy !== 0
+    )
+    .map((c) => {
+      return {
+        accuracy: c.accuracy,
+        day: new Date(c.createdAt.getDate()).toLocaleString("fr-FR", {
+          month: "short",
+          day: "2-digit",
+        }),
+      };
+    });
+};
+
+export function getAllWeaponName() {
+  return weapons.map((weapon) => {
+    return {
+      name: weapon.getName(),
+      path: {
+        badge: weapon.getBadge(),
+        image: weapon.getImage(),
+      },
+    };
+  });
 }
