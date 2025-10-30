@@ -16,3 +16,12 @@ export type WeaponType =
   | "SNIPER"
   | "PISTOL"
   | "SHOTGUN";
+
+export type WeaponInfo = {
+  name: string;
+  type: string;
+  path: {
+    badge: string;
+    image: string;
+  };
+};

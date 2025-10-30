@@ -4,6 +4,7 @@ import { ExternalToast } from "sonner";
 import { twMerge } from "tailwind-merge";
 import z from "zod";
 import weapons from "../data/weapon-list";
+import { WeaponInfo, WeaponType } from "../schema/weapon";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -116,15 +117,52 @@ export const filteredWeapons = (
 };
 
 export function getAllWeaponName() {
-  return weapons.map((weapon) => {
-    return {
+  const typeOrder = [
+    "SMG",
+    "ASSAULT_RIFLE",
+    "LMG",
+    "MARKSMAN",
+    "PISTOL",
+    "SHOTGUN",
+    "SNIPER",
+  ] satisfies WeaponType[];
+
+  const weaponByType = weapons.reduce((acc, weapon) => {
+    const type = weapon.getType();
+
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+
+    acc[type].push({
       name: weapon.getName(),
+      type: type,
       path: {
         badge: weapon.getBadge(),
         image: weapon.getImage(),
       },
-    };
-  });
+    });
+    return acc;
+  }, {} as Record<string, WeaponInfo[]>);
+
+  const sortedWeapon = Object.keys(weaponByType)
+    .sort((a, b) => {
+      const indexA = typeOrder.indexOf(a as WeaponType);
+      const indexB = typeOrder.indexOf(b as WeaponType);
+      return (
+        (indexA === -1 ? Infinity : indexA) -
+        (indexB === -1 ? Infinity : indexB)
+      );
+    })
+    .reduce((acc, type) => {
+      acc[type] = weaponByType[type].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      return acc;
+    }, {} as Record<string, WeaponInfo[]>);
+
+  return sortedWeapon;
 }
 
 export function formatedDate(date: Date) {

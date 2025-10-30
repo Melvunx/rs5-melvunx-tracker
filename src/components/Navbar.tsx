@@ -39,8 +39,6 @@ export function Navbar({ visible }: NavbarProps) {
         setSection("#form");
       else setSection("#carrousel");
 
-      console.log(lastScrollY);
-
       setLastScrollY(currentScrollY);
     };
 

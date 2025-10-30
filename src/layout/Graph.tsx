@@ -110,12 +110,25 @@ export function Graph() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Test pour la précision</CardTitle>
+      <CardHeader className="flex items-center mb-5 justify-between">
+        <CardTitle className="border-b pb-2 text-lg font-semibold tracking-tight first:mt-0">
+          Graphique de progrossion de l&apos;aim de Melvunx
+        </CardTitle>
         <ButtonGroup>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">{timeRange.label}</Button>
+              <Button
+                variant="outline"
+                className={`${
+                  timeRange.value === "7d"
+                    ? "text-lime-300"
+                    : timeRange.value === "30d"
+                    ? "text-orange-300"
+                    : "text-rose-300"
+                }`}
+              >
+                {timeRange.label}
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Filtrer par période</DropdownMenuLabel>
@@ -124,13 +137,34 @@ export function Graph() {
                 value={timeRange.value}
                 onValueChange={(value) => onDateChange(value)}
               >
-                <DropdownMenuRadioItem value="90d">
+                <DropdownMenuRadioItem
+                  className={
+                    timeRange.value === "90d"
+                      ? "bg-primary/10 border-l-2 border-primary"
+                      : "hover:bg-accent"
+                  }
+                  value="90d"
+                >
                   90 derniers jours
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="30d">
+                <DropdownMenuRadioItem
+                  className={
+                    timeRange.value === "30d"
+                      ? "bg-primary/10 border-l-2 border-primary"
+                      : "hover:bg-accent"
+                  }
+                  value="30d"
+                >
                   30 derniers jours
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="7d">
+                <DropdownMenuRadioItem
+                  className={
+                    timeRange.value === "7d"
+                      ? "bg-primary/10 border-l-2 border-primary"
+                      : "hover:bg-accent"
+                  }
+                  value="7d"
+                >
                   7 derniers jours
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
@@ -138,12 +172,24 @@ export function Graph() {
           </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">{weaponName}</Button>
+              <Button
+                variant="outline"
+                className={`${
+                  weaponName === "Toutes les armes"
+                    ? "text-cyan-100"
+                    : "text-primary"
+                }`}
+              >
+                {weaponName}
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Filtrer par arme</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center">
+                Filtrer par arme
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
+                className="text-center h-56"
                 value={weaponName}
                 onValueChange={(value) => onWeaponChange(value)}
               >
@@ -151,20 +197,41 @@ export function Graph() {
                   Toutes les armes
                 </DropdownMenuRadioItem>
                 <DropdownMenuSeparator />
-                {allWeaponsNames.map((w) => (
-                  <DropdownMenuRadioItem
-                    key={w.name}
-                    value={w.name}
-                    className="flex items-center justify-center gap-2"
-                  >
-                    <Avatar>
-                      <AvatarImage src={w.path.badge} />
-                      <AvatarFallback>
-                        {w.name.slice(0, 3).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    {w.name}
-                  </DropdownMenuRadioItem>
+                {Object.entries(allWeaponsNames).map(([type, weapons]) => (
+                  <div key={type}>
+                    <DropdownMenuLabel className="font-semibold text-xs uppercase bg-gray-400/10 text-muted-foreground italic px-2 py-1.5">
+                      {type}
+                    </DropdownMenuLabel>
+                    {weapons.map((weapon) => {
+                      const isSelected = weaponName === weapon.name;
+
+                      return (
+                        <DropdownMenuRadioItem
+                          key={weapon.name}
+                          value={weapon.name}
+                          className={`flex w-full items-center my-1 rounded-sm transition-colors ${
+                            isSelected
+                              ? "bg-primary/10 border-l-2 border-primary"
+                              : "hover:bg-accent"
+                          }`}
+                        >
+                          <Avatar>
+                            <AvatarImage src={weapon.path.badge} />
+                            <AvatarFallback>
+                              {weapon.name.slice(0, 3).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span
+                            className={`ml-1 ${
+                              isSelected ? "font-bold text-primary" : ""
+                            }`}
+                          >
+                            {weapon.name}
+                          </span>
+                        </DropdownMenuRadioItem>
+                      );
+                    })}
+                  </div>
                 ))}
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
